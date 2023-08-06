@@ -11,6 +11,44 @@ const ProjectManager = () => {
   const [showJoinForm, setShowJoinForm] = useState(false);
   const [invitationCode, setInvitationCode] = useState("");
   const [projects, setProjects] = useState([]);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [showProjectForm, setShowProjectForm] = useState(false);
+  const createNewProject = async () => {
+    try {
+      // Verifica si el nombre del proyecto no está vacío
+      if (!newProjectName) {
+        alert("Ingrese un nombre para el proyecto.");
+        return;
+      }
+      const userId = user.id;
+      // Objeto que representa el nuevo proyecto a crear
+      const newProject = {
+        name: newProjectName,
+        idOwner: userId,
+        tasks: [], // Aquí podrías añadir las tareas del nuevo proyecto si las tienes disponibles
+      };
+
+      // Realiza la solicitud POST al servidor para crear el proyecto
+      const response = await axios.post("http://localhost:8083/api/v2/proyect", newProject);
+
+      // Verifica la respuesta del servidor
+      if (response.data) {
+        // Si la respuesta es verdadera, el proyecto se creó correctamente
+        alert("El proyecto se creó correctamente.");
+        // Actualiza la lista de proyectos en el estado local con el nuevo proyecto creado
+        setProjects([...projects, response.data]);
+        setNewProjectName("");
+        setShowProjectForm(false);
+      } else {
+        // Si la respuesta es falsa, hubo un error al crear el proyecto
+        alert("Hubo un error al crear el proyecto. Por favor, inténtelo de nuevo.");
+      }
+    } catch (error) {
+      // Manejo de errores en caso de que ocurra alguna excepción
+      alert("Error al crear el proyecto. Por favor, inténtelo de nuevo.");
+      console.error(error);
+    }
+  };
 
   const { setSelectedProject, handleUpdateTasks } = useContext(ProjectContext);
 
@@ -41,8 +79,6 @@ const ProjectManager = () => {
       });
   }, [user.id]); // Agregar user.id a la lista de dependencias
 
-  const [newProjectName, setNewProjectName] = useState("");
-  const [showProjectForm, setShowProjectForm] = useState(false);
 
   const handleAddProjectClick = () => {
     setShowProjectForm(true);
@@ -54,16 +90,7 @@ const ProjectManager = () => {
   };
 
   const handleSaveProject = () => {
-    if (newProjectName) {
-      const newProject = {
-        id: projects.length + 1,
-        name: newProjectName,
-        tasks: [],
-      };
-      setProjects([...projects, newProject]);
-      setNewProjectName("");
-      setShowProjectForm(false);
-    }
+    createNewProject(); // Llama a la función para crear el nuevo proyecto
   };
 
   const handleCancelProject = () => {
@@ -77,7 +104,7 @@ const ProjectManager = () => {
   };
 
   const handleJoinProjectSubmit = () => {
-    // Aquí deberías implementar la lógica para verificar el código de invitación
+    // Aquí se implementar la lógica para verificar el código de invitación
     // y obtener el proyecto correspondiente desde el servidor.
     // Supongamos que recibes el proyecto al que te uniste en la respuesta del servidor.
     const joinedProject = {
@@ -98,10 +125,10 @@ const ProjectManager = () => {
   };
 
   // Obtener las tareas asociadas a un proyecto
-  const getTasksForProject = (projectId) => {
+  {/*const getTasksForProject = (projectId) => {
     const project = projects.find((project) => project.id === projectId);
     return project ? project.tasks : [];
-  };
+  };*/}
 
   // Filtrar los proyectos a los que te uniste
   const joinedProjects = projects.filter(

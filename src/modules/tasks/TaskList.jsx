@@ -1,7 +1,8 @@
 import { useState } from "react";
+import PropTypes from 'prop-types';
 
 const TaskListItem = ({
-  key,
+ // key,
   task,
   onEditClick,
   onDeleteClick,
@@ -190,6 +191,41 @@ const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
       ))}
     </div>
   );
+};
+TaskListItem.propTypes = {
+  key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  task: PropTypes.shape({
+    _id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    dateStart: PropTypes.string.isRequired,
+    dateFinish: PropTypes.string.isRequired,
+  }).isRequired,
+  onEditClick: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  editedTaskData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    dateStart: PropTypes.string.isRequired,
+    dateFinish: PropTypes.string.isRequired,
+  }).isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onSaveClick: PropTypes.func.isRequired,
+  onCancelClick: PropTypes.func.isRequired,
+};
+TaskList.propTypes = {
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      dateStart: PropTypes.string.isRequired,
+      dateFinish: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onEditTask: PropTypes.func.isRequired,
+  onDeleteTask: PropTypes.func.isRequired,
 };
 
 export default TaskList;

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import PropTypes from 'prop-types';
 
 // Subcomponente TaskFormToggle
 const TaskFormToggle = ({ onToggleForm }) => {
@@ -148,7 +149,7 @@ const TaskFormModal = ({ taskData, onEditTask, onSaveTask, onCancel }) => {
   );
 };
 
-const TaskForm = ({ tasks, onCreateTask }) => {
+const TaskForm = ({ onCreateTask }) => {
   const [taskData, setTaskData] = useState({
     name: "",
     description: "",
@@ -156,21 +157,6 @@ const TaskForm = ({ tasks, onCreateTask }) => {
     dateFinish: "",
   });
 
-  const generateNewId = () => {
-    if (tasks.length === 0) {
-      // Si no hay tareas, el nuevo id será 1
-      return 1;
-    } else {
-      // Si hay tareas, obtener el último id y sumar 1
-      const lastTask = tasks[tasks.length - 1];
-      return lastTask._id + 1;
-    }
-  };
-  const new_id = generateNewId();
-
-  useEffect(() => {
-    setTaskData((prevTaskData) => ({ ...prevTaskData, _id: new_id }));
-  }, [new_id]);
 
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -235,6 +221,47 @@ const TaskForm = ({ tasks, onCreateTask }) => {
       )}
     </>
   );
+};
+
+TaskForm.propTypes = {
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      dateStart: PropTypes.string.isRequired,
+      dateFinish: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onCreateTask: PropTypes.func.isRequired,
+};
+
+TaskFormToggle.propTypes = {
+  onToggleForm: PropTypes.func.isRequired,
+};
+
+TaskFormFields.propTypes = {
+  taskData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    dateStart: PropTypes.string.isRequired,
+    dateFinish: PropTypes.string.isRequired,
+  }).isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+TaskFormModal.propTypes = {
+  taskData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    dateStart: PropTypes.string.isRequired,
+    dateFinish: PropTypes.string.isRequired,
+  }).isRequired,
+  onEditTask: PropTypes.func.isRequired,
+  onSaveTask: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default TaskForm;

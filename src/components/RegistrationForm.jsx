@@ -1,19 +1,26 @@
-import { useState } from 'react';
-import axios from 'axios';
-import CustomModal from './CustomModal';
+import { useState } from 'react'; //useState un hook que permite utilizar el estado 
+import axios from 'axios';//librería para realizar peticiones HTTP,
+import CustomModal from './CustomModal'; //componente de modal personalizado 
 
-const RegistrationForm = ({ onRegister }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [nickName, setNickName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [message, setMessage] = useState(''); // Estado para el mensaje
+//Se define un componente funcional llamado RegistrationForm
+const RegistrationForm = () => {
+  //se crean las siguientes variables 
+  //Se utilizan los hooks useState para definir varios estados locales en el componente
+  const [firstName, setFirstName] = useState(''); //estado que almacena los valores de los campos del formulario
+  const [lastName, setLastName] = useState('');//estado que almacena los valores de los campos del formulario
+  const [nickName, setNickName] = useState('');//estado que almacena los valores de los campos del formulario
+  const [email, setEmail] = useState('');//estado que almacena los valores de los campos del formulario
+  const [password, setPassword] = useState(''); //estado que almacena los valores de los campos del formulario
+  const [modalIsOpen, setModalIsOpen] = useState(false);// estado que indica si el modal está abierto o cerrado
+  const [message, setMessage] = useState(''); // estado que almacena un mensaje para mostrar al usuario en el modal.
 
+  //Se define la función closeModal que establece el estado modalIsOpen en false, lo que cierra el modal.
   const closeModal = () => {
     setModalIsOpen(false);
   };
+  //Se definen funciones para manejar el cambio en los campos del formulario.
+  // Cada función toma el evento e (evento de cambio) 
+  //y actualiza el estado correspondiente con el valor ingresado por el usuario.
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
   };
@@ -34,6 +41,8 @@ const RegistrationForm = ({ onRegister }) => {
     setPassword(e.target.value);
   };
 
+  //Se define la función handleSubmit que se ejecuta cuando se envía el formulario.
+  //la funcion se encarga de enviar una petición POST a la API para registrar al usuario con los datos ingresados 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -44,9 +53,11 @@ const RegistrationForm = ({ onRegister }) => {
         email,
         password,
       });
-  
+      //creamos un if y el código de estado HTTP 200 significa "OK" 
+      //y se devuelve cuando la solicitud se ha realizado correctamente 
       if (response.status === 200) {
-        // Registro exitoso, puedes asumir que el usuario fue registrado correctamente.
+        // Registro exitoso, puedes asumir que el usuario fue registrado correctamente
+        //se ejecuta el codigo dentro del bloque if.
         // Puedes llamar a onRegister si necesitas realizar alguna acción adicional.
   
         // Resto del código para limpiar los campos del formulario, etc.
@@ -56,7 +67,7 @@ const RegistrationForm = ({ onRegister }) => {
         setEmail('');
         setPassword('');
   
-        // Opcional: Mostrar algún mensaje al usuario para indicar que el registro fue exitoso.
+        //  Mostrar mensaje al usuario para indicar que el registro fue exitoso.
         setMessage('Registro exitoso. ¡Bienvenido!');
         setModalIsOpen(true);
       } else {
@@ -64,6 +75,7 @@ const RegistrationForm = ({ onRegister }) => {
        
         // Opcional: Mostrar algún mensaje al usuario para indicar que el registro falló.
         setMessage('Error al registrar. Por favor, inténtalo nuevamente.');
+        //se establece el mensaje en el estado message y se abre el modal.
         setModalIsOpen(true);
       }
     } catch (error) {
@@ -71,11 +83,13 @@ const RegistrationForm = ({ onRegister }) => {
       
       // Opcional: Mostrar algún mensaje al usuario para indicar que el registro falló.
       setMessage('Error al registrar. Por favor, inténtalo nuevamente.');
+      //se establece el mensaje en el estado message y se abre el modal.
       setModalIsOpen(true);
     }
   };
 
   return (
+    // devuelve el JSX que representa el formulario de registro con los campos y botón de registro.
     <form onSubmit={handleSubmit} className="w-64 mx-auto mt-4 p-4 bg-white shadow-md rounded-lg">
       <div className="mb-4">
         <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">
@@ -148,6 +162,9 @@ const RegistrationForm = ({ onRegister }) => {
       >
         Registrarse
       </button>
+      {/**Renderizamos el componente CustomModal pasandole propiedades de isOpen, closeModal y message
+       * que controlan el estado del modal y el mensaje que se muestra al usuario.
+       */}
       <CustomModal isOpen={modalIsOpen} closeModal={closeModal} message={message} />
     </form>
   );
