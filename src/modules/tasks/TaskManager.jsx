@@ -1,19 +1,16 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
-import tasksData from "../../data/data";
 import ProjectContext from "../projects/ProjectContext"; // Importamos el ProjectContext
 
 const TaskManager = () => {
-  const { selectedProject } = useContext(ProjectContext); // Obtenemos el proyecto seleccionado desde el contexto
-  const [tasks, setTasks] = useState(tasksData);
-
+  const { tasks, handleUpdateTasks } = useContext(ProjectContext);
   const handleCreateTask = (newTask) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+    handleUpdateTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
   const handleEditTask = (taskId, editedTaskData) => {
-    setTasks((prevTasks) =>
+    handleUpdateTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, ...editedTaskData } : task
       )
@@ -21,20 +18,17 @@ const TaskManager = () => {
   };
 
   const handleDeleteTask = (taskId) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    handleUpdateTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== taskId)
+    );
   };
-
-  // Filtrar las tareas según el proyecto seleccionado
-  const filteredTasks = selectedProject
-    ? tasks.filter((task) => task.project === selectedProject.name)
-    : tasks;
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4">Task Manager</h1>
-      <TaskForm onCreateTask={handleCreateTask} />
+      <TaskForm tasks={tasks} onCreateTask={handleCreateTask} />
       <TaskList
-        tasks={filteredTasks} // Pasamos las tareas filtradas al TaskList
+        tasks={tasks} // Pasamos las tareas filtradas al TaskList
         onEditTask={handleEditTask}
         onDeleteTask={handleDeleteTask}
       />

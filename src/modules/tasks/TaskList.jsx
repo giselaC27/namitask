@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 
 const TaskListItem = ({
+  key,
   task,
   onEditClick,
   onDeleteClick,
@@ -12,62 +12,73 @@ const TaskListItem = ({
   onCancelClick,
 }) => {
   return (
-    <div key={task.id} className="bg-gray-100 rounded-lg p-4 mb-4">
+    <div key={task._id} className="bg-gray-100 rounded-lg p-4 mb-4">
       {isEditing ? (
         <div>
-          
           <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="taskType">
-                  Tipo de Tarea:
-                </label>
-                <input
-                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="taskType"
-                  name="taskType"
-                  type="text"
-                  value={editedTaskData.taskType}
-                  onChange={onInputChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="taskName">
-                  Nombre de Tarea:
-                </label>
-                <input
-                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="taskName"
-                  name="taskName"
-                  type="text"
-                  value={editedTaskData.taskName}
-                  onChange={onInputChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="taskDescription">
-                  Descripción de Tarea:
-                </label>
-                <textarea
-                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="taskDescription"
-                  name="taskDescription"
-                  value={editedTaskData.taskDescription}
-                  onChange={onInputChange}
-                ></textarea>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="dueDate">
-                  Fecha de Entrega:
-                </label>
-                <input
-                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="dueDate"
-                  name="dueDate"
-                  type="date"
-                  value={editedTaskData.dueDate}
-                  onChange={onInputChange}
-                />
-              </div>
-             
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="name"
+            >
+              Nombre de Tarea:
+            </label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="name"
+              name="name"
+              type="text"
+              value={editedTaskData.name}
+              onChange={onInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="description"
+            >
+              Descripción de Tarea:
+            </label>
+            <textarea
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="description"
+              name="description"
+              value={editedTaskData.description}
+              onChange={onInputChange}
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="dateStart"
+            >
+              Fecha de Inicio:
+            </label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="dateStart"
+              name="dateStart"
+              type="date"
+              value={editedTaskData.dateStart}
+              onChange={onInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="dateFinish"
+            >
+              Fecha de Entrega:
+            </label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="dateFinish"
+              name="dateFinish"
+              type="date"
+              value={editedTaskData.dateFinish}
+              onChange={onInputChange}
+            />
+          </div>
+
           <div className="flex justify-end">
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
@@ -85,29 +96,30 @@ const TaskListItem = ({
         </div>
       ) : (
         <div>
-          <h3 className="text-lg font-bold mb-2">{task.taskName}</h3>
-          
-          <p className="text-gray-700 mb-2">
-            <span className="font-bold">Tipo de Tarea:</span> {task.taskType}
-          </p>
+          <h3 className="text-lg font-bold mb-2">{task.name}</h3>
+
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Descripción de Tarea:</span>{" "}
-            {task.taskDescription}
+            {task.description}
           </p>
           <p className="text-gray-700 mb-2">
-            <span className="font-bold">Fecha de Entrega:</span> {task.dueDate}
+            <span className="font-bold">Fecha de Inicio:</span> {task.dateStart}
+          </p>
+
+          <p className="text-gray-700 mb-2">
+            <span className="font-bold">Fecha de Entrega:</span> {task.dateFinish}
           </p>
 
           <div className="flex justify-end">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={() => onEditClick(task.id)} // Corregir aquí
+              onClick={() => onEditClick(task._id)} // Corregir aquí
             >
               Editar
             </button>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={() => onDeleteClick(task.id)} // Corregir aquí
+              onClick={() => onDeleteClick(task._id)} // Corregir aquí
             >
               Eliminar
             </button>
@@ -121,16 +133,14 @@ const TaskListItem = ({
 const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTaskData, setEditedTaskData] = useState({
-    project: "",
-    taskType: "",
-    taskName: "",
-    taskDescription: "",
-    dueDate: "",
-   
+      name: "",
+      description: "",
+      dateStart: "",
+      dateFinish: "",
   });
 
   const handleEditClick = (taskId) => {
-    const taskToEdit = tasks.find((task) => task.id === taskId);
+    const taskToEdit = tasks.find((task) => task._id === taskId);
     setEditingTaskId(taskId);
     setEditedTaskData({ ...taskToEdit });
   };
@@ -148,12 +158,10 @@ const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
   const handleCancelClick = () => {
     setEditingTaskId(null);
     setEditedTaskData({
-      project: "",
-      taskType: "",
-      taskName: "",
-      taskDescription: "",
-      dueDate: "",
-      
+      name: "",
+      description: "",
+      dateStart: "",
+      dateFinish: "",
     });
   };
 
@@ -169,11 +177,11 @@ const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
     <div className="mt-4">
       {tasks.map((task) => (
         <TaskListItem
-          key={task.id}
+          key={task._id}
           task={task}
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteTask}
-          isEditing={isTaskEditing(task.id)}
+          isEditing={isTaskEditing(task._id)}
           editedTaskData={editedTaskData}
           onInputChange={handleInputChange}
           onSaveClick={handleSaveClick}

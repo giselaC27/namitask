@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // Subcomponente TaskFormToggle
 const TaskFormToggle = ({ onToggleForm }) => {
@@ -16,71 +16,69 @@ const TaskFormToggle = ({ onToggleForm }) => {
 const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
   return (
     <form onSubmit={onSubmit} className="mt-4">
-      
       <div className="mb-4">
-        <label
-          className="block text-gray-700 font-bold mb-2"
-          htmlFor="taskType"
-        >
-          Tipo de Tarea:
-        </label>
-        <input
-          className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskType"
-          name="taskType"
-          type="text"
-          placeholder="Examen, Tarea, etc."
-          value={taskData.taskType}
-          onChange={onInputChange}
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          className="block text-gray-700 font-bold mb-2"
-          htmlFor="taskName"
-        >
+        <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
           Nombre de Tarea:
         </label>
         <input
           className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskName"
-          name="taskName"
+          id="name"
+          name="name"
           type="text"
           placeholder="Nombre de la tarea"
-          value={taskData.taskName}
+          value={taskData.name}
           onChange={onInputChange}
         />
       </div>
       <div className="mb-4">
         <label
           className="block text-gray-700 font-bold mb-2"
-          htmlFor="taskDescription"
+          htmlFor="description"
         >
           Descripción de Tarea:
         </label>
         <textarea
           className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskDescription"
-          name="taskDescription"
+          id="description"
+          name="description"
           placeholder="Descripción de la tarea"
-          value={taskData.taskDescription}
+          value={taskData.description}
           onChange={onInputChange}
         ></textarea>
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2" htmlFor="dueDate">
+        <label
+          className="block text-gray-700 font-bold mb-2"
+          htmlFor="dateStart"
+        >
+          Fecha de Inicio:
+        </label>
+        <input
+          className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="dateStart"
+          name="dateStart"
+          type="date"
+          value={taskData.dateStart}
+          onChange={onInputChange}
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          className="block text-gray-700 font-bold mb-2"
+          htmlFor="dateFinish"
+        >
           Fecha de Entrega:
         </label>
         <input
           className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="dueDate"
-          name="dueDate"
+          id="dateFinish"
+          name="dateFinish"
           type="date"
-          value={taskData.dueDate}
+          value={taskData.dateFinish}
           onChange={onInputChange}
         />
       </div>
-     
+
       <div className="flex justify-end">
         <button
           type="submit"
@@ -106,25 +104,24 @@ const TaskFormModal = ({ taskData, onEditTask, onSaveTask, onCancel }) => {
     <div className="fixed inset-0 flex items-center justify-center z-10">
       <div className="bg-white rounded-lg p-8">
         <h2 className="text-xl font-bold mb-4">Tarea Creada</h2>
+
         <p>
-          <span className="font-bold">Proyecto:</span> {taskData.project}
-        </p>
-        <p>
-          <span className="font-bold">Tipo de Tarea:</span> {taskData.taskType}
-        </p>
-        <p>
-          <span className="font-bold">Nombre de Tarea:</span>{" "}
-          {taskData.taskName}
+          <span className="font-bold">Nombre de Tarea:</span> {taskData.name}
         </p>
         <p>
           <span className="font-bold">Descripción de Tarea:</span>{" "}
-          {taskData.taskDescription}
+          {taskData.description}
         </p>
         <p>
-          <span className="font-bold">Fecha de Entrega:</span>{" "}
-          {taskData.dueDate}
+          <span className="font-bold">Fecha de Inicio:</span>{" "}
+          {taskData.dateStart}
         </p>
-      
+
+        <p>
+          <span className="font-bold">Fecha de Entrega:</span>{" "}
+          {taskData.dateFinish}
+        </p>
+
         <div className="flex justify-end mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
@@ -151,18 +148,29 @@ const TaskFormModal = ({ taskData, onEditTask, onSaveTask, onCancel }) => {
   );
 };
 
-const TaskForm = ({ project, onCreateTask }) => {
+const TaskForm = ({ tasks, onCreateTask }) => {
   const [taskData, setTaskData] = useState({
-    project: project,
-    taskType: "",
-    taskName: "",
-    taskDescription: "",
-    dueDate: "",
-  
+    name: "",
+    description: "",
+    dateStart: "",
+    dateFinish: "",
   });
+
+  const generateNewId = () => {
+    if (tasks.length === 0) {
+      // Si no hay tareas, el nuevo id será 1
+      return 1;
+    } else {
+      // Si hay tareas, obtener el último id y sumar 1
+      const lastTask = tasks[tasks.length - 1];
+      return lastTask._id + 1;
+    }
+  };
+  const new_id = generateNewId();
+
   useEffect(() => {
-    setTaskData((prevTaskData) => ({ ...prevTaskData, project: project }));
-  }, [project]);
+    setTaskData((prevTaskData) => ({ ...prevTaskData, _id: new_id }));
+  }, [new_id]);
 
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -189,24 +197,20 @@ const TaskForm = ({ project, onCreateTask }) => {
     onCreateTask(taskData);
     setShowModal(false);
     setTaskData({
-      project: "",
-      taskType: "",
-      taskName: "",
-      taskDescription: "",
-      dueDate: "",
-      
+      name: "",
+      description: "",
+      dateStart: "",
+      dateFinish: "",
     });
   };
   const handleCancel = () => {
     setShowForm(false);
     setShowModal(false);
     setTaskData({
-      project: project,
-      taskType: "",
-      taskName: "",
-      taskDescription: "",
-      dueDate: "",
-     
+      name: "",
+      description: "",
+      dateStart: "",
+      dateFinish: "",
     });
   };
 
