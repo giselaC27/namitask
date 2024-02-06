@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 // Subcomponente TaskFormToggle
 const TaskFormToggle = ({ onToggleForm }) => {
@@ -12,6 +12,13 @@ const TaskFormToggle = ({ onToggleForm }) => {
     </button>
   );
 };
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Agregar cero si el mes es menor a 10
+  const day = String(today.getDate()).padStart(2, "0"); // Agregar cero si el día es menor a 10
+  return `${year}-${month}-${day}`;
+}
 
 // Subcomponente TaskFormFields
 const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
@@ -29,6 +36,7 @@ const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
           placeholder="Nombre de la tarea"
           value={taskData.name}
           onChange={onInputChange}
+          required
         />
       </div>
       <div className="mb-4">
@@ -45,6 +53,7 @@ const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
           placeholder="Descripción de la tarea"
           value={taskData.description}
           onChange={onInputChange}
+          required
         ></textarea>
       </div>
       <div className="mb-4">
@@ -59,8 +68,10 @@ const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
           id="dateStart"
           name="dateStart"
           type="date"
+          min={getCurrentDate()}
           value={taskData.dateStart}
           onChange={onInputChange}
+          required
         />
       </div>
       <div className="mb-4">
@@ -75,8 +86,10 @@ const TaskFormFields = ({ taskData, onInputChange, onSubmit, onCancel }) => {
           id="dateFinish"
           name="dateFinish"
           type="date"
+          min={getCurrentDate()}
           value={taskData.dateFinish}
           onChange={onInputChange}
+          required
         />
       </div>
 
@@ -155,8 +168,9 @@ const TaskForm = ({ onCreateTask }) => {
     description: "",
     dateStart: "",
     dateFinish: "",
-  });
+    state: "false",
 
+  });
 
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -224,15 +238,6 @@ const TaskForm = ({ onCreateTask }) => {
 };
 
 TaskForm.propTypes = {
-  tasks: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      dateStart: PropTypes.string.isRequired,
-      dateFinish: PropTypes.string.isRequired,
-    })
-  ).isRequired,
   onCreateTask: PropTypes.func.isRequired,
 };
 
@@ -244,8 +249,8 @@ TaskFormFields.propTypes = {
   taskData: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    dateStart: PropTypes.string.isRequired,
-    dateFinish: PropTypes.string.isRequired,
+    dateStart: PropTypes.string,
+    dateFinish: PropTypes.string,
   }).isRequired,
   onInputChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -256,8 +261,8 @@ TaskFormModal.propTypes = {
   taskData: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    dateStart: PropTypes.string.isRequired,
-    dateFinish: PropTypes.string.isRequired,
+    dateStart: PropTypes.string,
+    dateFinish: PropTypes.string,
   }).isRequired,
   onEditTask: PropTypes.func.isRequired,
   onSaveTask: PropTypes.func.isRequired,

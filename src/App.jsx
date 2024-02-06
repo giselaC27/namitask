@@ -1,34 +1,36 @@
-import {  useContext } from 'react';
-import { AuthContext } from './components/AuthContext';
-import TaskManager from './modules/tasks/TaskManager';
-import Navbar from './components/Navbar'
-import LoginForm from './components/LoginForm';
-import RegistrationForm from './components/RegistrationForm'
-import ProjectManager from './modules/projects/ProjectManager';
-import { ProjectProvider } from './modules/projects/ProjectContext';
+import { useContext } from "react";
+import { AuthContext } from "./components/AuthContext";
+import TaskManager from "./modules/tasks/TaskManager";
+import Navbar from "./components/Navbar";
+import LoginForm from "./modules/login/LoginForm";
+import RegistrationForm from "./modules/register/RegistrationForm";
+import ProjectManager from "./modules/projects/ProjectManager";
+import { ProjectProvider } from "./modules/projects/ProjectContext";
+//se define el componente app
 
 const App = () => {
-  const { isLoggedIn, user, handleLogin, handleLogout, setIsLoggedIn, setUser } =
-    useContext(AuthContext);
+  const {
+    isLoggedIn, //estado de autenticacion 
+    user,
+    handleLogin,//proceso de autenticacion
+    handleLogout,
+  
+  } = useContext(AuthContext); //accedemos a lo valores del contexto de autenticacion
 
-  // Función para manejar el registro
-  const handleRegister = (userData) => {
-    // Aquí puedes realizar la lógica para registrar al nuevo usuario en el servidor y guardar la información en una base de datos
-    // Por simplicidad, asumiremos que el registro es exitoso y almacenaremos los datos del usuario en el estado
-    setIsLoggedIn(true);
-    setUser(userData);
-  };
+ 
 
   return (
     <div>
       <div>
+          {/* Si el usuario está autenticado y hay datos de usuario */}
         {isLoggedIn && user ? (
           <>
+           {/* Mostrar un mensaje de bienvenida y un botón de cierre de sesión */}
             <h2 className="text-black p-4 text-2xl font-bold text-center">
-              Bienvenido a NamiTask, {user.nickName}!
+              Bienvenido a NamiTask, {user.lastName +" "+ user.nickName}! &#x1F44B;
             </h2>
             <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2 focus:outline-none focus:shadow-outline"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2 focus:outline-none focus:shadow-outline mb-4 ml-2"
               onClick={handleLogout}
             >
               Cerrar sesión
@@ -46,12 +48,14 @@ const App = () => {
             <h2 className="text-black p-4 text-2xl font-bold text-center">
               Registrarse
             </h2>
-            <RegistrationForm onRegister={handleRegister} />
+            <RegistrationForm  />
           </>
         )}
       </div>
+      {/* Si el usuario está autenticado */}
       {isLoggedIn && (
         <>
+        {/* Mostrar la barra de navegación y los componentes de administración */}
           <Navbar></Navbar>
           <div className="flex">
             <ProjectProvider>

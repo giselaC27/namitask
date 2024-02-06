@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8083/api/v2/userAccess",
+        "http://localhost:8080/api/v2/userAccess",
         {
           //parametros del userData
           emailOrNickname: userData.nickname,
@@ -64,11 +64,13 @@ export const AuthProvider = ({ children }) => {
         Cookies.set("user", userDataJson);
       } else {
         // Manejar el caso en que la autenticación falla
-        console.error("Error de autenticación:", response.data);
+
+    console.error("Error de autenticación:", response.data);
       }
     } catch (error) {
       // Manejar errores aquí si la autenticación falla
-      console.error("Error de autenticación:", error);
+
+  console.error("Error de autenticación:", error);
     }
   };
   //Funcion handleLogout se utiliza para cerrar la sesión del usuario.
@@ -93,3 +95,4 @@ export const AuthProvider = ({ children }) => {
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired, // Asegura que "children" es un nodo de React y es requerido.
 };
+
